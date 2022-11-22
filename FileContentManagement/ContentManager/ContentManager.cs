@@ -4,6 +4,8 @@ using OneBitSoftware.Utilities;
 using System;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +14,6 @@ namespace FileContentManagement
     internal class ContentManager<TKey> : IContentManager<TKey>
         where TKey : struct, IEquatable<TKey>
     {
-        private readonly FileManagementConfiguration configuration;
         private readonly string url;
         private readonly NetworkCredential credentials;
 
@@ -23,7 +24,6 @@ namespace FileContentManagement
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            this.configuration = configuration;
             url = $@"ftp://{configuration.Host}:{configuration.Port}/";
             credentials = new NetworkCredential(configuration.Username, configuration.Password);
         }
@@ -39,13 +39,7 @@ namespace FileContentManagement
 
             try
             {
-                var uri = new Uri(url + id);
-                var request = (FtpWebRequest)WebRequest.Create(uri);
-
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = credentials;                
-                request.ContentLength = fileContent.Stream.Length;
-
+                var request = CreateRequest(id, WebRequestMethods.Ftp.UploadFile);
                 using Stream requestStream = await request.GetRequestStreamAsync();
                 await fileContent.Stream.CopyToAsync(requestStream, cancellationToken);
 
@@ -72,12 +66,7 @@ namespace FileContentManagement
 
             try
             {
-                var uri = new Uri(url + id);
-                var request = (FtpWebRequest)WebRequest.Create(uri);
-
-                request.Method = WebRequestMethods.Ftp.ListDirectory;
-                request.Credentials = credentials;
-
+                var request = CreateRequest(id, WebRequestMethods.Ftp.ListDirectory);
                 using var response = (FtpWebResponse)await request.GetResponseAsync();
                 if (response != null)
                 {
@@ -100,12 +89,7 @@ namespace FileContentManagement
 
             try
             {
-                var uri = new Uri(url + id);
-                var request = (FtpWebRequest)WebRequest.Create(uri);
-
-                request.Method = WebRequestMethods.Ftp.DownloadFile;
-                request.Credentials = credentials;
-
+                var request = CreateRequest(id, WebRequestMethods.Ftp.DownloadFile);
                 using var response = (FtpWebResponse)await request.GetResponseAsync();
                 using var stream = response.GetResponseStream();
                 var streamInfo = new StreamInfo
@@ -128,13 +112,7 @@ namespace FileContentManagement
         {
             try
             {
-                var uri = new Uri(url + id);
-                var request = (FtpWebRequest)WebRequest.Create(uri);
-
-                request.Method = WebRequestMethods.Ftp.DownloadFile;
-                request.Credentials = credentials;
-                request.KeepAlive = true;
-
+                var request = CreateRequest(id, WebRequestMethods.Ftp.DownloadFile);
                 using var response = (FtpWebResponse)await request.GetResponseAsync();
                 using var memoryStream = new MemoryStream();
                 await response.GetResponseStream().CopyToAsync(memoryStream, cancellationToken);
@@ -174,13 +152,7 @@ namespace FileContentManagement
             var result = new OperationResult();
             try
             {
-                var uri = new Uri(url + id);
-                var request = (FtpWebRequest)WebRequest.Create(uri);
-
-                request.Method = WebRequestMethods.Ftp.DeleteFile;
-                request.Credentials = credentials;
-                request.KeepAlive = true;
-
+                var request = CreateRequest(id, WebRequestMethods.Ftp.DeleteFile);
                 var response = (FtpWebResponse)await request.GetResponseAsync();
                 if (response.StatusCode != FtpStatusCode.FileActionOK)
                 {
@@ -198,9 +170,41 @@ namespace FileContentManagement
             }
         }
 
-        public Task<OperationResult<string>> GetHashAsync(TKey id, CancellationToken cancellationToken)
+        public async Task<OperationResult<string>> GetHashAsync(TKey id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var fileResult = await GetAsync(id, cancellationToken);
+            if (fileResult.Fail)
+            {
+                var result = new OperationResult<string>(string.Empty);
+                result.AppendErrors(fileResult);
+                return result;
+            }
+
+            var hash = await new MD5CryptoServiceProvider().ComputeHashAsync(fileResult.ResultObject.Stream, cancellationToken);
+            return new OperationResult<string>(ByteArrayToString(hash));
+        }
+
+        private FtpWebRequest CreateRequest(TKey id, string method)
+        {
+            var uri = new Uri(url + id);
+            var request = (FtpWebRequest)WebRequest.Create(uri);
+
+            request.Method = method;
+            request.Credentials = credentials;
+            request.KeepAlive = true;
+
+            return request;
+        }
+
+        private string ByteArrayToString(byte[] array)
+        {
+            var sb = new StringBuilder(array.Length);
+            for (var i = 0; i < array.Length; i++)
+            {
+                sb.Append(array[i].ToString("X2"));
+            }
+
+            return sb.ToString();
         }
     }
 }

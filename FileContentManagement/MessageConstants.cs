@@ -1,6 +1,6 @@
 ﻿namespace FileContentManagement
 {
-    public static class MessageConstants
+    internal static class MessageConstants
     {
         public const string StoringSuccess = "The file with id {0} has been successfully stored.";
 
