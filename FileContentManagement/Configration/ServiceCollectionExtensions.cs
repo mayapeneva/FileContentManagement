@@ -6,7 +6,7 @@ namespace FileContentManagement.Configuration
 {
     public static class ServiceCollectionExtensions
     {
-        private const string SectionName = "FileManagement";
+        private const string SectionName = "fileManagement";
         private const string Host = "host";
         private const string Port = "port";
         private const string Username = "username";
@@ -27,7 +27,7 @@ namespace FileContentManagement.Configuration
                 throw new ArgumentNullException(SectionName);
             }
 
-            var fileManagementConfiguration = new FileManagementConfiguration (host, port, username, password);
+            var fileManagementConfiguration = new FileManagementConfiguration(host, port, username, password);
             services
                 .AddSingleton(fileManagementConfiguration)
                 .AddSingleton<IContentManager<TKey>, ContentManager<TKey>>();
