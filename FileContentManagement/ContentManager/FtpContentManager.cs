@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FileContentManagement
 {
-    internal class FtpContentManager<TKey> : IContentManager<TKey>
+    public class FtpContentManager<TKey> : IContentManager<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         private readonly string url;

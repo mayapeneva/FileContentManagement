@@ -12,7 +12,7 @@ namespace FileContentManagement.IntegrationTests
             var psInfo = new ProcessStartInfo
             {
                 FileName = "ftpdmin.exe",
-                Arguments = String.Format("-p {0} -ha 127.0.0.1 \"{1}\"", port, rootDirectory),
+                Arguments = String.Format("-p {0} -ha 127.0.0.1 \"{1}\"", port, rootDirectory, true),
                 WindowStyle = hideFtpWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal
             };
 

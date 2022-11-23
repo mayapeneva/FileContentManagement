@@ -1,6 +1,6 @@
 ﻿namespace FileContentManagement.Configuration
 {
-    internal class FileManagementConfiguration
+    public class FileManagementConfiguration
     {
         public FileManagementConfiguration(string host, int port, string username, string password)
         {
