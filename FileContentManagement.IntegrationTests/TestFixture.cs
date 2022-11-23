@@ -10,9 +10,9 @@ namespace FileContentManagement.IntegrationTests
 
         public TestFixture()
         {
-            server = new FtpServer(string.Empty);
+            //server = new FtpServer(string.Empty);
 
-            var fileManagementConfiguration = new FileManagementConfiguration("172.22.64.1", 21, "anonymous", "mozilla@example.com");
+            var fileManagementConfiguration = new FileManagementConfiguration("192.168.0.102", 21, "FTP-user", "pass123");
             FtpManager = new FtpContentManager<Guid>(fileManagementConfiguration);
         }
 
@@ -20,7 +20,7 @@ namespace FileContentManagement.IntegrationTests
 
         public void Dispose()
         {
-            server.Dispose();
+            //server.Dispose();
         }
     }
 }

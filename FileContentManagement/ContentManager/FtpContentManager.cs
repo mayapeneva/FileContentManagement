@@ -44,7 +44,7 @@ namespace FileContentManagement
                 await fileContent.Stream.CopyToAsync(requestStream, cancellationToken);
 
                 using var response = (FtpWebResponse)await request.GetResponseAsync();
-                if (response.StatusCode != FtpStatusCode.FileActionOK)
+                if (response.StatusCode != FtpStatusCode.DataAlreadyOpen)
                 {
                     result.AppendError(string.Format(MessageConstants.StoringFailed, id, response.StatusDescription));
                     return result;

@@ -11,18 +11,11 @@ namespace FileContentManagement.IntegrationTests
     public class FtpContentManagerTests : IClassFixture<TestFixture>, IDisposable
     {
         private readonly Guid fileId;
-        private readonly StreamInfo fileInfo;
         private readonly TestFixture factory;
 
         public FtpContentManagerTests(TestFixture factory)
         {
             fileId = Guid.NewGuid();
-            using var stream = new FileStream("../../../TestData/FileOne.docx", FileMode.Open, FileAccess.Read);
-            fileInfo = new StreamInfo
-            {
-                Length = stream.Length,
-                Stream = stream
-            };
 
             this.factory = factory;
         }
@@ -34,6 +27,13 @@ namespace FileContentManagement.IntegrationTests
         [Fact]
         public async Task StoreAsync_StoresValidFile()
         {
+            using var stream = new FileStream("../../../TestData/FileOne.docx", FileMode.Open, FileAccess.Read);
+            var fileInfo = new StreamInfo
+            {
+                Length = stream.Length,
+                Stream = stream
+            };
+
             var result = await factory.FtpManager.StoreAsync(fileId, fileInfo, CancellationToken.None);
 
             Assert.True(result.Success);
