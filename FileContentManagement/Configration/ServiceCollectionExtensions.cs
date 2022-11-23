@@ -30,7 +30,7 @@ namespace FileContentManagement.Configuration
             var fileManagementConfiguration = new FileManagementConfiguration(host, port, username, password);
             services
                 .AddSingleton(fileManagementConfiguration)
-                .AddSingleton<IContentManager<TKey>, ContentManager<TKey>>();
+                .AddSingleton<IContentManager<TKey>, FtpContentManager<TKey>>();
 
             return services;
         }

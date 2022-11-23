@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace FileContentManagement
 {
-    internal class ContentManager<TKey> : IContentManager<TKey>
+    internal class FtpContentManager<TKey> : IContentManager<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         private readonly string url;
         private readonly NetworkCredential credentials;
 
-        public ContentManager(FileManagementConfiguration configuration)
+        public FtpContentManager(FileManagementConfiguration configuration)
         {
             if (configuration is null)
             {

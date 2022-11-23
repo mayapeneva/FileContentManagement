@@ -8,6 +8,6 @@ namespace FileContentManagement.DTO
 
         public Stream Stream { get; set; }
 
-        public ulong UnsignedLength => this.Length < 0 ? 0 : (ulong)this.Length;
+        public ulong UnsignedLength => Length < 0 ? 0 : (ulong)Length;
     }
 }
