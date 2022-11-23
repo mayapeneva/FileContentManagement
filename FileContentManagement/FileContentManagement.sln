@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileContentManagement", "Fi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileContentManagement.IntegrationTests", "..\FileContentManagement.IntegrationTests\FileContentManagement.IntegrationTests.csproj", "{7F9C7934-D5AC-49E6-AAC4-22F3BD793B8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentManagerRunner", "..\ContentManagerRunner\ContentManagerRunner.csproj", "{3D65F123-7091-4608-92FC-EA33B3C8542A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7F9C7934-D5AC-49E6-AAC4-22F3BD793B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F9C7934-D5AC-49E6-AAC4-22F3BD793B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F9C7934-D5AC-49E6-AAC4-22F3BD793B8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D65F123-7091-4608-92FC-EA33B3C8542A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D65F123-7091-4608-92FC-EA33B3C8542A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D65F123-7091-4608-92FC-EA33B3C8542A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D65F123-7091-4608-92FC-EA33B3C8542A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

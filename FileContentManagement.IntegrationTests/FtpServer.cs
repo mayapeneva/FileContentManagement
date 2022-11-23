@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace FileContentManagement.IntegrationTests
 {
-    public class FtpIntegrationServer : IDisposable
+    public class FtpServer : IDisposable
     {
         private readonly Process ftpProcess;
 
-        public FtpIntegrationServer(string rootDirectory, int port = 21, bool hideFtpWindow = true)
+        public FtpServer(string rootDirectory, int port = 21, bool hideFtpWindow = true)
         {
             var psInfo = new ProcessStartInfo
             {
