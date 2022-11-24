@@ -160,7 +160,7 @@ namespace FileContentManagement
                 }
 
                 result.AddSuccessMessage(string.Format(MessageConstants.DeletingSuccess, id));
-                return new OperationResult();
+                return result;
             }
             catch (Exception ex)
             {
@@ -171,16 +171,21 @@ namespace FileContentManagement
 
         public async Task<OperationResult<string>> GetHashAsync(TKey id, CancellationToken cancellationToken)
         {
-            var fileResult = await GetAsync(id, cancellationToken);
-            if (fileResult.Fail)
+            try
+            {
+                var request = CreateRequest(id, WebRequestMethods.Ftp.DownloadFile);
+                using var response = (FtpWebResponse)await request.GetResponseAsync();
+                using var stream = response.GetResponseStream();
+
+                var hash = await new MD5CryptoServiceProvider().ComputeHashAsync(stream, cancellationToken);
+                return new OperationResult<string>(ByteArrayToString(hash));
+            }
+            catch (Exception ex)
             {
                 var result = new OperationResult<string>(string.Empty);
-                result.AppendErrors(fileResult);
+                result.AppendException(ex);
                 return result;
             }
-
-            var hash = await new MD5CryptoServiceProvider().ComputeHashAsync(fileResult.ResultObject.Stream, cancellationToken);
-            return new OperationResult<string>(ByteArrayToString(hash));
         }
 
         private FtpWebRequest CreateRequest(TKey id, string method)
@@ -207,3 +212,4 @@ namespace FileContentManagement
         }
     }
 }
+ 

@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -206,6 +208,81 @@ namespace FileContentManagement.IntegrationTests
         {
             //Act
             var result = await factory.FtpManager.GetBytesAsync(new Guid("00000000-0000-0000-0000-000000000000"), CancellationToken.None);
+
+            //Assert
+            Assert.False(result.Success);
+            Assert.True(result.Fail);
+            Assert.Empty(result.ResultObject);
+            Assert.Contains("File unavailable (e.g., file not found, no access).", result.Errors.FirstOrDefault().Message);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_DeletesExsitingFile()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            using var stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
+            var fileInfo = new StreamInfo
+            {
+                Length = stream.Length,
+                Stream = stream
+            };
+
+            await factory.FtpManager.StoreAsync(id, fileInfo, CancellationToken.None);
+
+            //Act
+            var result = await factory.FtpManager.DeleteAsync(id, CancellationToken.None);
+
+            //Assert
+            Assert.True(result.Success);
+            Assert.False(result.Fail);
+            Assert.True(result.SuccessMessages.FirstOrDefault() == $"The file with id {id} has been successfully deleted.");
+        }
+
+        [Fact]
+        public async Task DeleteAsync_DoesNotDeleteNonExsitingFile()
+        {
+            //Arrange
+            var id = new Guid("00000000-0000-0000-0000-000000000000");
+
+            //Act
+            var result = await factory.FtpManager.DeleteAsync(id, CancellationToken.None); ;
+
+            //Assert
+            Assert.False(result.Success);
+            Assert.True(result.Fail);
+            Assert.Contains("File unavailable (e.g., file not found, no access).", result.Errors.FirstOrDefault().Message);
+        }
+
+        [Fact]
+        public async Task GetHashAsync_ReturnsHashForExsitingFile()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            using var stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
+            var fileInfo = new StreamInfo
+            {
+                Length = stream.Length,
+                Stream = stream
+            };
+
+            await factory.FtpManager.StoreAsync(id, fileInfo, CancellationToken.None);
+
+            //Act
+            var result = await factory.FtpManager.GetHashAsync(id, CancellationToken.None);
+
+            //Assert
+            Assert.True(result.Success);
+            Assert.False(result.Fail);
+            Assert.NotNull(result.ResultObject);
+            Assert.NotEmpty(result.ResultObject);
+        }
+
+        [Fact]
+        public async Task GetHashAsync_DoesNotReturnHashForNonExsitingFile()
+        {
+            //Act
+            var result = await factory.FtpManager.GetHashAsync(new Guid("00000000-0000-0000-0000-000000000000"), CancellationToken.None);
 
             //Assert
             Assert.False(result.Success);
