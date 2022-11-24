@@ -156,7 +156,7 @@ namespace FileContentManagement
                 if (response.StatusCode != FtpStatusCode.FileActionOK)
                 {
                     result.AppendError(string.Format(MessageConstants.DeletingFailed, id, response.StatusDescription));
-                    return new OperationResult();
+                    return result;
                 }
 
                 result.AddSuccessMessage(string.Format(MessageConstants.DeletingSuccess, id));

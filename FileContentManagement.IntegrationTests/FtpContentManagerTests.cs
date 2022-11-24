@@ -8,7 +8,7 @@ using Xunit;
 
 namespace FileContentManagement.IntegrationTests
 {
-    public class FtpContentManagerTests : IClassFixture<TestFixture>, IDisposable
+    public class FtpContentManagerTests : IClassFixture<TestFixture>
     {
         private const string FilePath = "../../../TestData/FileOne.docx";
         private readonly Guid fileId;
@@ -19,11 +19,6 @@ namespace FileContentManagement.IntegrationTests
             fileId = Guid.NewGuid();
 
             this.factory = factory;
-        }
-
-        public void Dispose()
-        {
-            factory.Dispose();
         }
 
         [Fact]
@@ -132,7 +127,7 @@ namespace FileContentManagement.IntegrationTests
         public async Task ExistsAsync_DoesNotFindNonExsitingFile()
         {
             //Act
-            var result = await factory.FtpManager.ExistsAsync(new Guid("00000000-0000-0000-0000-000000000000"), CancellationToken.None);
+            var result = await factory.FtpManager.ExistsAsync(Guid.Empty, CancellationToken.None);
 
             //Assert
             Assert.False(result.Success);
@@ -169,7 +164,7 @@ namespace FileContentManagement.IntegrationTests
         public async Task GetAsync_DoesNotReturnNonExsitingFile()
         {
             //Act
-            var result = await factory.FtpManager.GetAsync(new Guid("00000000-0000-0000-0000-000000000000"), CancellationToken.None);
+            var result = await factory.FtpManager.GetAsync(Guid.Empty, CancellationToken.None);
 
             //Assert
             Assert.False(result.Success);
@@ -206,7 +201,7 @@ namespace FileContentManagement.IntegrationTests
         public async Task GetBytesAsync_DoesNotReturnNonExsitingFile()
         {
             //Act
-            var result = await factory.FtpManager.GetBytesAsync(new Guid("00000000-0000-0000-0000-000000000000"), CancellationToken.None);
+            var result = await factory.FtpManager.GetBytesAsync(Guid.Empty, CancellationToken.None);
 
             //Assert
             Assert.False(result.Success);
@@ -242,7 +237,7 @@ namespace FileContentManagement.IntegrationTests
         public async Task DeleteAsync_DoesNotDeleteNonExsitingFile()
         {
             //Arrange
-            var id = new Guid("00000000-0000-0000-0000-000000000000");
+            var id = Guid.Empty;
 
             //Act
             var result = await factory.FtpManager.DeleteAsync(id, CancellationToken.None); ;
@@ -281,7 +276,7 @@ namespace FileContentManagement.IntegrationTests
         public async Task GetHashAsync_DoesNotReturnHashForNonExsitingFile()
         {
             //Act
-            var result = await factory.FtpManager.GetHashAsync(new Guid("00000000-0000-0000-0000-000000000000"), CancellationToken.None);
+            var result = await factory.FtpManager.GetHashAsync(Guid.Empty, CancellationToken.None);
 
             //Assert
             Assert.False(result.Success);
