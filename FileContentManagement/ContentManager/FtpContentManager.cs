@@ -60,7 +60,7 @@ namespace FileContentManagement
             }
         }
 
-        public async Task<OperationResult<bool>> ExistsAsync(TKey id, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> ExistsAsync(TKey id, CancellationToken cancellationToken) 
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -94,7 +94,6 @@ namespace FileContentManagement
                 using var stream = response.GetResponseStream();
                 var streamInfo = new StreamInfo
                 {
-                    Length = stream.Length,
                     Stream = stream
                 };
 
