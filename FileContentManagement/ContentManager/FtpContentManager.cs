@@ -60,7 +60,7 @@ namespace FileContentManagement
             }
         }
 
-        public async Task<OperationResult<bool>> ExistsAsync(TKey id, CancellationToken cancellationToken) 
+        public async Task<OperationResult<bool>> ExistsAsync(TKey id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -212,4 +212,3 @@ namespace FileContentManagement
         }
     }
 }
- 

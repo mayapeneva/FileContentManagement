@@ -1,6 +1,5 @@
 ﻿using FileContentManagement.Configuration;
 using System;
-using System.IO;
 
 namespace FileContentManagement.IntegrationTests
 {
