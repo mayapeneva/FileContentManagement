@@ -20,6 +20,7 @@ namespace FileContentManagement.IntegrationTests
 
             this.factory = factory;
         }
+
         public void Dispose()
         {
             factory.Dispose();
